@@ -42,9 +42,9 @@ impl State {
     fn process(&mut self, message: Message) {
         // TODO: create a match expression to process the different message
         match message {
-            Message::ChangeColor(r, g, b) => self.change_color((r, g, b)),
+            Message::ChangeColor(r, g, b) => self.change_color((r as u8, g as u8, b as u8)),
             Message::Echo(s) => self.echo(s),
-            Message::Move(p) => self.move_position(p),
+            Message::Move { x, y } => self.move_position(Point { x: x as u8, y: y as u8 }),
             Message::Quit => self.quit(),
         }
         // variants
@@ -67,7 +67,7 @@ mod tests {
         };
         state.process(Message::ChangeColor(255, 0, 255));
         state.process(Message::Echo(String::from("hello world")));
-        state.process(Message::Move(Point { x: 10, y: 15 }));
+        state.process(Message::Move{ x:10, y:15 });
         state.process(Message::Quit);
 
         assert_eq!(state.color, (255, 0, 255));
