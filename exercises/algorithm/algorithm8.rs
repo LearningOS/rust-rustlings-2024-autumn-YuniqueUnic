@@ -52,30 +52,46 @@ impl<T> Default for Queue<T> {
     }
 }
 
-pub struct myStack<T>
-{
-	//TODO
-	q1:Queue<T>,
-	q2:Queue<T>
+pub struct MyStack<T> {
+    q1: Queue<T>,
+    q2: Queue<T>,
 }
-impl<T> myStack<T> {
+
+impl<T> MyStack<T> {
     pub fn new() -> Self {
         Self {
-			//TODO
-			q1:Queue::<T>::new(),
-			q2:Queue::<T>::new()
+            q1: Queue::new(),
+            q2: Queue::new(),
         }
     }
+
     pub fn push(&mut self, elem: T) {
-        //TODO
+        // 将新元素加入到q1中
+        self.q1.enqueue(elem);
     }
+
     pub fn pop(&mut self) -> Result<T, &str> {
-        //TODO
-		Err("Stack is empty")
+        // 如果q1为空，则检查q2是否也为空
+        if self.q1.is_empty() && self.q2.is_empty() {
+            return Err("Stack is empty");
+        }
+
+        // 将q1中的元素转移到q2，直到只剩下一个
+        while self.q1.size() > 1 {
+            if let Ok(e) = self.q1.dequeue() {
+                self.q2.enqueue(e);
+            }
+        }
+
+        // 交换q1和q2的角色
+        std::mem::swap(&mut self.q1, &mut self.q2);
+
+        // 弹出交换至q2中剩下的唯一元素
+        self.q2.dequeue()
     }
+
     pub fn is_empty(&self) -> bool {
-		//TODO
-        true
+        self.q1.is_empty() && self.q2.is_empty()
     }
 }
 
@@ -85,7 +101,7 @@ mod tests {
 	
 	#[test]
 	fn test_queue(){
-		let mut s = myStack::<i32>::new();
+		let mut s = MyStack::<i32>::new();
 		assert_eq!(s.pop(), Err("Stack is empty"));
         s.push(1);
         s.push(2);
