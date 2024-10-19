@@ -5,8 +5,13 @@
 */
 // I AM NOT DONE
 
-fn sort<T>(array: &mut [T]){
-	//TODO
+fn sort<T: std::cmp::PartialOrd>(array: &mut [T]){
+    if array.len()<=1 { return;  }
+    for i in 0..array.len() {
+        for j in i+1..array.len() {
+            if array[j] < array[i] {  array.swap(i,j); }
+        }
+    }
 }
 #[cfg(test)]
 mod tests {
